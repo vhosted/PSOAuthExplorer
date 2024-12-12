@@ -1,4 +1,4 @@
-function Encode-Url {
+function ConvertTo-Url {
     param (
         [string]$Value
     )

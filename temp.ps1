@@ -13,7 +13,7 @@ $encodedRedirectUri = [System.Web.HttpUtility]::UrlEncode($redirectUri)
 $encodedScope = [System.Web.HttpUtility]::UrlEncode($scope)
 
 # Construct the URL
-$authRequestUrl = "$($authUrl)?client_id=$encodedClientId&response_type=code&redirect_uri=$encodedRedirectUri&scope=$encodedScope"
+$authRequestUrl = "$($authUrl)?client_id=$ClientId&response_type=code&redirect_uri=$encodedRedirectUri&scope=$encodedScope"
 
 # Start the HTTP listener as a job
 $job = Start-Job -ScriptBlock {
