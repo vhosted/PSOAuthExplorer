@@ -12,7 +12,7 @@ function Invoke-AuthorizationCodeFlow {
 
     # Resolve tenant ID if a tenant name is provided
     if ($Tenant -notmatch "^[0-9a-fA-F-]{36}$") {
-        $Tenant = Get-TenantId -TenantName $Tenant
+        $Tenant = Get-MsftTenantId -TenantName $Tenant
     }
 
     # Entra ID default, if no authorization endpoint has been provided
@@ -27,13 +27,6 @@ function Invoke-AuthorizationCodeFlow {
 
     $listenerPort = $RedirectUri.Split(":")[-1].Replace("/", "")
 
-    # URL encoding
-    $encodedRedirectUri = ConvertTo-URL $RedirectUri
-    $encodedScope = ConvertTo-URL $Scope
-    Write-Verbose $AuthorizationEndpoint
-    # Construct URL for the authentication request
-    $authRequestUrl = "$($AuthorizationEndpoint)?client_id=$ClientId&response_type=code&redirect_uri=$encodedRedirectUri&scope=$encodedScope"
-
     # Startup HTTP listener as a job to catch authorization code, stops after a default timeout of 60 seconds
     Write-Verbose "Starting HTTP listener on port tcp/$listenerPort"
     $job = Start-Job -Name "StartupHttpListener" -ScriptBlock {
@@ -43,13 +36,31 @@ function Invoke-AuthorizationCodeFlow {
         if (Test-Path $ModulePath) { Import-Module $ModulePath }
         Start-HttpListener -Prefix $RedirectUri -Verbose
     } -ArgumentList $RedirectUri
-    
-    Write-Verbose "Open browser for user authentication"
-    Start-Process $authRequestUrl
+
+    Get-AuthorizationCode -ClientId $ClientId -RedirectUri $RedirectUri -Scope $Scope -AuthUrl $AuthorizationEndpoint
 
     # Wait for the job to complete and get the authorization code
     $jobResult = Receive-Job -Job $job -Wait -AutoRemoveJob
     $authCode = $jobResult
 
+    if ($null -eq $authCode -or "" -eq $authCode) {
+        Write-Error "Authorization code not found. Check your configuration and parameters."
+        Exit 1
+    }
+
     Write-Verbose "Authorization Code: $authCode"
+
+    # Get an access token
+    $parameters = @{
+        TokenUrl     = $TokenEndpoint
+        ClientId     = $ClientId
+        RedirectUri  = $RedirectUri
+        Scope        = $Scope
+        GrantType    = "authorization_code"
+        ClientSecret = $ClientSecret
+        AuthCode     = $authCode
+    }
+
+    $response = Get-AccessToken @parameters
+    return $response
 }

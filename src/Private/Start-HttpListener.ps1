@@ -21,7 +21,9 @@ function Start-HttpListener {
                 if ($authCode) {
                     $response.StatusCode = 200
                     $response.ContentType = 'text/html'
-                    $response.OutputStream.Write([Text.Encoding]::UTF8.GetBytes("<html><body>Authorization code received: $authCode</body></html>"), 0, 50)
+                    [byte[]]$buffer = [Text.Encoding]::UTF8.GetBytes("<html><body>Authorization code received: $authCode</body></html>")
+                    $response.ContentLength64 = $buffer.Length
+                    $response.OutputStream.Write($buffer, 0, $buffer.Length)
                     $response.Close()
                     $httpListener.Stop()
                     return $authCode
@@ -31,6 +33,7 @@ function Start-HttpListener {
                     $response.ContentType = 'text/html'
                     $response.OutputStream.Write([Text.Encoding]::UTF8.GetBytes("<html><body>Error: Authorization code not found</body></html>"), 0, 50)
                     $response.Close()
+                    $httpListener.Stop()
                 }
             }
             catch {

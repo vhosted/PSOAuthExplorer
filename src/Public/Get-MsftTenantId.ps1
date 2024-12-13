@@ -1,4 +1,4 @@
-function Get-TenantId {
+function Get-MsftTenantId {
     param (
         [string]$TenantName
     )
