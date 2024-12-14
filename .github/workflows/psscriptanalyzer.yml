@@ -11,8 +11,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up PowerShell
-      uses: actions/setup-powershell@v2
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'  # Specify the .NET Core version
 
     - name: Install PSScriptAnalyzer
       run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
