@@ -1,6 +1,7 @@
 # https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#redeem-a-code-for-an-access-token
 function Get-AccessToken {
     param (
+        [cmdletbinding()]
         [Parameter(Mandatory)]
         [string]$TokenUrl,
 
@@ -19,7 +20,9 @@ function Get-AccessToken {
 
         [string]$Scope,
         
-        [string]$CodeVerifier
+        [string]$CodeVerifier,
+
+        [string]$DeviceCode
         
         
     )
@@ -27,7 +30,6 @@ function Get-AccessToken {
     $ContentType = "application/x-www-form-urlencoded"
     $tokenRequestBody = @{
         client_id  = $ClientId
-        scope      = $Scope
         grant_type = $GrantType
     }
 
@@ -35,6 +37,7 @@ function Get-AccessToken {
         "authorization_code" {
             $tokenRequestBody.Add("code", $AuthCode)
             $tokenRequestBody.Add("redirect_uri", $RedirectUri)
+            $tokenRequestBody.Add("scope", $Scope)
 
             if ($CodeVerifier) {
                 $tokenRequestBody.Add("code_verifier", $CodeVerifier)
@@ -47,14 +50,17 @@ function Get-AccessToken {
         }
         "client_credentials" {
             $tokenRequestBody.Add("client_secret", (ConvertFrom-SecureString $ClientSecret -AsPlainText))
+            $tokenRequestBody.Add("scope", $Scope)
         }
         "refresh_token" {  }
-        "urn:ietf:params:oauth:grant-type:device_code" {  }
+        "urn:ietf:params:oauth:grant-type:device_code" {
+            $tokenRequestBody.Add("device_code", $DeviceCode)
+        }
         "password" {  }
         Default {}
     }
 
-    #Write-Verbose ($tokenRequestBody | Out-String)
+    Write-Verbose ($tokenRequestBody | Out-String)
 
     $response = Invoke-RestMethod -Method Post -Uri $TokenUrl -ContentType $ContentType -Body $tokenRequestBody
     return $response
