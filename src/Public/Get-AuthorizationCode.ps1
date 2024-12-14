@@ -24,9 +24,14 @@ function Get-AuthorizationCode {
     $encodedRedirectUri = ConvertTo-URL $RedirectUri
     $encodedScope = ConvertTo-URL $Scope
 
-    Write-Verbose "Authorization Ednpoint: $AuthUrl"
     $authRequestUrl = "$($AuthUrl)?client_id=$encodedClientId&response_type=$ResponseType&prompt=$Prompt&redirect_uri=$encodedRedirectUri&scope=$encodedScope"
+    
+    if ([string]::IsNullOrEmpty($CodeChallenge) -eq $false) {
+        
+        $authRequestUrl += "&code_challenge=$CodeChallenge&code_challenge_method=$CodeChallengeMethod"
+    }
 
+    Write-Verbose "Auth Request URL:`t$authRequestUrl"
     Write-Verbose "Starting browser for user authentication..."
     Start-Process $authRequestUrl
 }

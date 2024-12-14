@@ -49,6 +49,8 @@ function Get-AccessToken {
         Default {}
     }
 
+    #Write-Verbose ($tokenRequestBody | Out-String)
+
     $response = Invoke-RestMethod -Method Post -Uri $TokenUrl -ContentType $ContentType -Body $tokenRequestBody
     return $response
 }
