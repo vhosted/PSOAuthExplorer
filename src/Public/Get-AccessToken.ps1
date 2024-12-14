@@ -3,16 +3,22 @@ function Get-AccessToken {
     param (
         [Parameter(Mandatory)]
         [string]$TokenUrl,
+
         [Parameter(Mandatory)]
         [string]$ClientId,
-        [Parameter(Mandatory)]
-        [string]$RedirectUri,
+
         [Parameter(Mandatory)]
         [Validateset("authorization_code", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:device_code", "password")]
         [string]$GrantType,
+
+        [string]$RedirectUri,
+
         [securestring]$ClientSecret,
+
         [string]$AuthCode,
+
         [string]$Scope,
+        
         [string]$CodeVerifier
         
         
@@ -20,29 +26,28 @@ function Get-AccessToken {
 
     $ContentType = "application/x-www-form-urlencoded"
     $tokenRequestBody = @{
-        client_id    = $ClientId
-        redirect_uri = $RedirectUri
+        client_id  = $ClientId
+        scope      = $Scope
+        grant_type = $GrantType
     }
 
     switch ($GrantType) {
         "authorization_code" {
-            $tokenRequestBody.Add("grant_type", $GrantType)
             $tokenRequestBody.Add("code", $AuthCode)
-            
-            if ($Scope) {
-                $tokenRequestBody.Add("scope", $Scope)
-            }
+            $tokenRequestBody.Add("redirect_uri", $RedirectUri)
 
             if ($CodeVerifier) {
                 $tokenRequestBody.Add("code_verifier", $CodeVerifier)
             }
 
+            # Confidential Client
             if ($ClientSecret) {
-                # Confidential Client
                 $tokenRequestBody.Add("client_secret", (ConvertFrom-SecureString $ClientSecret -AsPlainText))
             }
         }
-        "client_credentials" {  }
+        "client_credentials" {
+            $tokenRequestBody.Add("client_secret", (ConvertFrom-SecureString $ClientSecret -AsPlainText))
+        }
         "refresh_token" {  }
         "urn:ietf:params:oauth:grant-type:device_code" {  }
         "password" {  }
