@@ -1,3 +1,16 @@
+<#
+.SYNOPSIS
+Resolves the tenant ID from a tenant name.
+
+.DESCRIPTION
+This cmdlet resolves the tenant ID of an Azure AD tenant from a tenant name.
+
+.PARAMETER TenantName
+The tenant name to resolve.
+
+.EXAMPLE
+PS C:\> Get-MsftTenantId -TenantName "example.com"
+#>
 function Get-MsftTenantId {
     param (
         [string]$TenantName

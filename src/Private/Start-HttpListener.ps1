@@ -1,8 +1,21 @@
+<#
+.SYNOPSIS
+Starts an HTTP listener on the given prefix.
+
+.DESCRIPTION
+The Start-HttpListener function starts an HTTP listener on the given prefix. It will wait for a single request and then stop the listener.
+
+.PARAMETER Prefix
+The prefix to start the HTTP listener on. Defaults to "http://localhost:8080/".
+
+.EXAMPLE
+Start-HttpListener -Prefix "http://localhost:8081/"
+
+#>
 function Start-HttpListener {
     [CmdletBinding()]
     param (
-        [string]$Prefix = "http://localhost:8080/",
-        [int]$TimeoutSeconds = 60
+        [string]$Prefix = "http://localhost:8080/"
     )
 
     $catcher = Start-Job -Name "HttpListenerCatchCode" -ScriptBlock {

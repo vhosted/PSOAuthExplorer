@@ -1,4 +1,28 @@
-# https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+<#
+.SYNOPSIS
+Generates a random URL-safe string of the given length for use as a
+code challenge.
+
+.DESCRIPTION
+The string is generated according to the rules outlined in RFC 7636
+section 4.1. The string is URL-safe and may contain the following
+characters: A-Z, a-z, 0-9, and the special characters -._~.
+
+.PARAMETER Length
+The length of the code challenge string to generate. Defaults to 43.
+
+.PARAMETER Method
+The PKCE method to use. Currently, only "S256" is supported, which
+uses the SHA-256 hash function to generate the code verifier.
+
+.NOTES
+https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+
+.EXAMPLE
+New-PKCEChallenge -Length 32 -Method "S256"
+.OUTPUTS
+A string of the given length suitable for use as a code challenge.
+#>
 function New-PKCEChallenge {
     [CmdletBinding()]
     param (

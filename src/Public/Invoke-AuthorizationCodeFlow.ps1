@@ -1,5 +1,47 @@
-# example:
-# Invoke-AuthorizationCodeFlow -ClientId "38964a68-dd39-472e-8d26-b603ef27f1f3" -Tenant "a9cb93b5-628d-4d91-9167-245ad1b55a52" -RedirectUri "http://localhost:8080/" -Scope "openid profile email User.Read" -ClientSecret (ConvertTo-SecureString "secret_goes_here" -AsPlainText) -PKCE -Verbose
+<#
+    .SYNOPSIS
+    Invokes the OAuth2 authorization code flow.
+
+    .DESCRIPTION
+    This function will invoke the OAuth2 authorization code flow and return an access token.
+    The authorization code flow is used to obtain an access token for a client service.
+    The client service must be registered in Azure Active Directory.
+
+    .PARAMETER ClientId
+    The client Id of the client service.
+
+    .PARAMETER Tenant
+    Specifies the tenant ID or name. If the name is provided, it will be resolved to the corresponding tenant ID (Entra ID tenants only).
+
+    .PARAMETER RedirectUri
+    The redirect URI of the client service.
+
+    .PARAMETER Scope
+    A space-separated list of scopes that you want the user to consent to.
+
+    .PARAMETER ClientSecret
+    (Optional) Confidential clients only. The client secret of the client service. Must be provided as a secure string.
+
+    .PARAMETER AuthorizationEndpoint
+    (Optional) Specifies the endpoint to request authorization. If not specified, the default value is "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize".
+
+    .PARAMETER TokenEndpoint
+    (Optional) Specifies the endpoint to request an access token. If not specified, the default value is "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token".
+
+    .PARAMETER PKCE
+    (Optional) If specified, the function will use PKCE (Proof Key for Code Exchange) to protect the authorization code.
+
+    .NOTES
+    https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
+
+    .EXAMPLE
+    PS C:\> Invoke-AuthorizationCodeFlow -ClientId "38964a68-dd39-472e-8d26-b603ef27f1f3" -Tenant "a9cb93b5-628d-4d91-9167-245ad1b55a52" -RedirectUri "http://localhost:8080/" -Scope "openid profile email User.Read" -ClientSecret (ConvertTo-SecureString "secret_goes_here" -AsPlainText)
+
+    This example shows how to invoke the authorization code flow using the function.
+
+    .LINK
+    https://learn.microsoft.com/en-us/entra/identity/protocols/oauth2-authorization-code-flow
+    #>
 function Invoke-AuthorizationCodeFlow {
     [CmdletBinding()]
     param (
@@ -63,7 +105,7 @@ function Invoke-AuthorizationCodeFlow {
     $listenerPort = $RedirectUri.Split(":")[-1].Replace("/", "")
 
     # Startup HTTP listener as a job to catch authorization code, stops after a default timeout of 60 seconds
-    # Write-Verbose "Starting HTTP listener on port tcp/$listenerPort"
+    Write-Verbose "Starting HTTP listener on port tcp/$listenerPort"
     $job = Start-Job -Name "StartupHttpListener" -ScriptBlock {
         param ($RedirectUri)
         # needed while testing
