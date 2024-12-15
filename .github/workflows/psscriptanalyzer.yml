@@ -1,9 +1,6 @@
 name: Build and Deploy PowerShell Module
 
-on:
-  push:
-    branches:
-      - main
+on: [workflow_dispatch]
 
 jobs:
   build:
