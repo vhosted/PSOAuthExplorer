@@ -4,7 +4,7 @@ param (
     [string]$Path
 )
 #lint.ps1 -Path "..\src\*\*.ps1"
-Invoke-ScriptAnalyzer -Path $Path -Recurse -OutVariable issues
+Invoke-ScriptAnalyzer -Path "../src/*/*.ps1" -Recurse -OutVariable issues
 
 $errors = $issues | Where-Object { $_.Severity -eq "Error" }
 $warnings = $issues | Where-Object { $_.Severity -eq "Warning" }
