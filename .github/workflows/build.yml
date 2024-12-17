@@ -1,0 +1,16 @@
+name: Build and Deploy PowerShell Module
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Lint with PSScriptAnalyzer
+      run: .\lint.ps1 -Path "..\src\*\*.ps1"
+      shell: pwsh
