@@ -1,4 +1,4 @@
-name: Build and Deploy PowerShell Module
+name: Testing
 
 on: [workflow_dispatch]
 
