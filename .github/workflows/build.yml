@@ -12,5 +12,5 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Lint with PSScriptAnalyzer
-      run: ./lint.ps1 -Path "../src/*/*.ps1"
+      run: ./build/lint.ps1 -Path "../src/*/*.ps1"
       shell: pwsh
