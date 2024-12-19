@@ -33,7 +33,13 @@ jobs:
       run: ./build/build.ps1 -Version ${{env.majorMinorPatch}}
       shell: pwsh
 
+    - name: Check for changes
+      id: check_changes
+      run: | 
+        git diff --exit-code || echo "Changes detected"
+
     - name: commit and push changes
+      if: steps.check_changes.outcome == 'failure'
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
