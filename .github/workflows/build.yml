@@ -41,6 +41,7 @@ jobs:
       run: | 
         git diff --quiet
         echo "CHANGES_FOUND=$?" >> $GITHUB_OUTPUT
+      continue-on-error: true
 
     - name: commit and push changes
       if: steps.check_changes.CHANGES_FOUND != '0'
