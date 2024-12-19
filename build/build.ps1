@@ -7,15 +7,14 @@ param (
 
 )
 
-$manifest = Get-ChildItem "$ModulePath\*.psd1"
-$moduleName = $manifest.Name -replace ".psd1"
+$manifest = Get-ChildItem -Recurse | Where-Object { $_.Name -like "*.psd1" }
 
-
-
-# get functions
-$pubFunctions = ((Get-ChildItem $ModulePath\public\*.ps1 -Recurse).Name).Replace(".ps1", "")
+# get public functions to export
+$pubFunctions = ((Get-ChildItem "$($manifest.DirectoryName)\public\*.ps1" -Recurse).Name).Replace(".ps1", "")
 
 if ($PreReleaseTag) {
     Update-ModuleManifest -Path $manifest.FullName -FunctionsToExport $pubFunctions -ModuleVersion $Version -Prerelease $PreReleaseTag
 }
-Update-ModuleManifest -Path $manifest.FullName -FunctionsToExport $pubFunctions -ModuleVersion $Version
+else {
+    Update-ModuleManifest -Path $manifest.FullName -FunctionsToExport $pubFunctions -ModuleVersion $Version
+}
