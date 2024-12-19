@@ -7,6 +7,8 @@ param (
 
 )
 
+write-ouptut (Get-ChildItem -Recurse)
+
 $manifest = Get-ChildItem -Recurse | Where-Object { $_.Name -like "*.psd1" }
 
 # get public functions to export
