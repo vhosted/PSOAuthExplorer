@@ -1,6 +1,9 @@
 name: test build and publish PowerShell module
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:

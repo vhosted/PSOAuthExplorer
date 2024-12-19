@@ -1,6 +1,10 @@
 name: (dry run) test and build PowerShell module
 
-on: [workflow_dispatch]
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   build:
