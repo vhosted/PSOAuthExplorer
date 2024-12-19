@@ -48,7 +48,7 @@ jobs:
         git push
 
     - name: publish module to PSGallery
-      run: ./build/publish.ps1 -ModulePath "./PSOauthExplorer" -ApiKey ${{secrets.PS_GALLERY_KEY}}
+      run: ./build/publish.ps1 -ApiKey ${{secrets.PS_GALLERY_KEY}}
       shell: pwsh
 
     - name: create github release
