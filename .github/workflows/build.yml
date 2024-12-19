@@ -22,7 +22,7 @@ jobs:
       with:
         versionSpec: '6.0.x'
 
-    - name: Determine next version
+    - name: determine next release version
       uses: gittools/actions/gitversion/execute@v3.1.1
 
     - name: output version
