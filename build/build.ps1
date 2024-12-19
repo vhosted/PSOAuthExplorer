@@ -7,7 +7,7 @@ param (
 
 )
 
-write-ouptut (Get-ChildItem -Recurse)
+Write-Output (Get-ChildItem -Recurse)
 
 $manifest = Get-ChildItem -Recurse | Where-Object { $_.Name -like "*.psd1" }
 
