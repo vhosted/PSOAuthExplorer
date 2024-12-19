@@ -1,4 +1,4 @@
-name: test build and publish PowerShell module
+name: (dry run) test and build PowerShell module
 
 on: [workflow_dispatch]
 
@@ -38,22 +38,7 @@ jobs:
       run: | 
         git diff --exit-code || echo "Changes detected"
 
-    - name: commit and push changes
+    - name: (dry-run) commit and push changes
       if: steps.check_changes.outcome == 'failure'
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "auto bump version to ${{env.majorMinorPatch}}"
-        git push
-
-    - name: publish module to PSGallery
-      run: ./build/publish.ps1 -ApiKey ${{secrets.PS_GALLERY_KEY}}
-      shell: pwsh
-
-    - name: create github release
-      uses: softprops/action-gh-release@v2
-      with:
-        name: Auto generated release ${{env.majorMinorPatch}}
-        tag_name: ${{env.majorMinorPatch}}
-        make_latest: "true"
+        echo "(dry run) changes detected, this step would commit and push changes"
