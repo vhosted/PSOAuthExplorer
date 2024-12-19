@@ -1,0 +1,48 @@
+name: (dry run) test and build PowerShell module
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    name: test build and deploy PowerShell module
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: lint with PSScriptAnalyzer
+      run: ./build/lint.ps1 -Path "./"
+      shell: pwsh
+
+    - name: install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.1.1
+      with:
+        versionSpec: '6.0.x'
+
+    - name: determine next release version
+      uses: gittools/actions/gitversion/execute@v3.1.1
+
+    - name: output version
+      run: |
+        echo "Ver: ${{env.majorMinorPatch}} PreReleaseTag: ${{env.preReleaseTag}}"
+
+    - name: build module
+      run: ./build/build.ps1 -Version ${{env.majorMinorPatch}}
+      shell: pwsh
+
+    - name: Check for changes
+      id: check_changes
+      run: | 
+        git diff --exit-code || echo "Changes detected"
+
+    - name: (dry-run) commit and push changes
+      if: steps.check_changes.outcome == 'failure'
+      run: |
+        echo "(dry run) changes detected, this step would commit and push changes"
