@@ -30,7 +30,7 @@ jobs:
         echo "Ver: ${{env.majorMinorPatch}} PreReleaseTag: ${{env.preReleaseTag}}"
 
     - name: build module
-      run: ./build/build.ps1 -ModulePath "./PSOauthExplorer" -Version ${{env.majorMinorPatch}}
+      run: ./build/build.ps1 -Version ${{env.majorMinorPatch}}
       shell: pwsh
 
     - name: commit and push changes
