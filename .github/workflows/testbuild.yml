@@ -41,6 +41,7 @@ jobs:
       id: check_changes
       run: | 
         git diff --exit-code || echo "Changes detected"
+      continue-on-error: true
 
     - name: (dry-run) commit and push changes
       if: steps.check_changes.outcome == 'failure'
