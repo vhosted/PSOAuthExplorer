@@ -1,16 +1,48 @@
-name: Build and Deploy PowerShell Module
+name: test build and deploy PowerShell module
 
 on: [workflow_dispatch]
 
 jobs:
   build:
-    name: Build and Test
+    name: test build and deploy PowerShell module
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-    - name: Lint with PSScriptAnalyzer
-      run: ./build/lint.ps1 -Path "./src/*/*.ps1"
+    - name: lint with PSScriptAnalyzer
+      run: ./build/lint.ps1 -Path "./PSOauthExplorer/*/*.ps1"
       shell: pwsh
+
+    - name: install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.1.1
+      with:
+        versionSpec: '6.0.x'
+
+    - name: Determine next version
+      uses: gittools/actions/gitversion/execute@v3.1.1
+
+    - name: output version
+      run: |
+        echo "Ver: ${{env.majorMinorPatch}} PreReleaseTag: ${{env.preReleaseTag}}"
+
+    - name: build module
+      run: ./build/build.ps1 -ModulePath "./PSOauthExplorer" -Version ${{env.majorMinorPatch}}
+      shell: pwsh
+
+    - name: commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "bump version to ${{env.majorMinorPatch}}"
+        git push
+
+    - name: publish module to PSGallery
+      run: ./build/publish.ps1 -ModulePath "./PSOauthExplorer" -ApiKey ${{secrets.PSGALLERY_API_KEY}}
+      shell: pwsh
+
+# create github release
