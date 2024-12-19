@@ -38,11 +38,16 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add .
-        git commit -m "bump version to ${{env.majorMinorPatch}}"
+        git commit -m "auto bump version to ${{env.majorMinorPatch}}"
         git push
 
     - name: publish module to PSGallery
       run: ./build/publish.ps1 -ModulePath "./PSOauthExplorer" -ApiKey ${{secrets.PSGALLERY_API_KEY}}
       shell: pwsh
 
-# create github release
+    - name: create github release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: Auto generated release ${{env.majorMinorPatch}}
+        tag_name: ${{env.majorMinorPatch}}
+        make_latest: "true"
