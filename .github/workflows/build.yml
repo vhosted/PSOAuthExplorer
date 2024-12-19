@@ -14,7 +14,7 @@ jobs:
         fetch-depth: 0
 
     - name: lint with PSScriptAnalyzer
-      run: ./build/lint.ps1 -Path "./*/*.ps1"
+      run: ./build/lint.ps1 -Path "./"
       shell: pwsh
 
     - name: install GitVersion
