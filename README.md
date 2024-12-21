@@ -2,7 +2,7 @@
 [![test build and publish PowerShell module](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml/badge.svg)](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml)
 # PSOAuthExplorer
 
-**PSOAuthExplorer** is a PowerShell module created for exploring, testing, and learning OAuth2 and OpenID Connect (OIDC) flows. Heavily focused on Entra ID, other IdPs have not been tested yet. Each invocation of a flow returns
+**PSOAuthExplorer** is a PowerShell module created for exploring, testing, and learning OAuth2 and OpenID Connect (OIDC) flows. Heavily focused on Entra ID, other IdPs have not been tested yet.
 
 ## Features
 
