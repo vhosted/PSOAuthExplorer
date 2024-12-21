@@ -1,3 +1,4 @@
+[![Latest Release](https://img.shields.io/github/v/release/vhosted/PSOAuthExplorer)](https://github.com/vhosted/PSOAuthExplorer/releases/latest)
 [![test build and publish PowerShell module](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml/badge.svg)](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml)
 # PSOAuthExplorer
 
@@ -32,6 +33,9 @@ git clone https://github.com/vhosted/PSOAuthExplorer.git
 Import-Module ./PSOAuthExplorer/PSOAuthExplorer.psm1
 ```
 ## Usage
+
+> [!IMPORTANT]  
+> It is expected, that the applicable scopes for the flow are already granted by the user or an admin.
 
 ### OpenID Configuration
 For Entra ID tenants, visit https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration to get information about the endpoints among other information.
