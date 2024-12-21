@@ -46,5 +46,16 @@ The second example below shows how to invoke the authorization code flow for a c
 Invoke-AuthorizationCodeFlow -ClientId "{clientId}" -Tenant "{tenantId}" -RedirectUri "http://localhost:8080/" -Scope "openid profile email" -ClientSecret (ConvertTo-SecureString "{clientSecret}" -AsPlainText -Force) -AuthorizationEndpoint "{authEndpoint}" -TokenEndpoint "{tokenEndpoint}"
 ```
 ### Client Credentials Flow
+This example shows how to invoke the client credentials flow (confidential client). The parameters `-ClientId`, `-Tenant`, `-ClientSecret`, and `-Scope` are required. The `-TokenEndpoint` is optional, and if not provided, the default endpoint for Entra ID will be used, based on the tenantId provided with the `-Tenant` parameter.
+The value for the parameter `-Scope` should be the resource identifier suffixed with `.default`. All scopes included must be for a single resource.
+```powershell
+Invoke-ClientCredentialsFlow -ClientId "{clientId}" -Tenant "{tenantId}" -Scope "https://graph.microsoft.com/.default" -ClientSecret (ConvertTo-SecureString "{clientSecret}" -AsPlainText -Force)
+```
 
 ### Device Authorization Flow
+Device Authorization Flow is primarily intended for input-constrained devices like smart TVs and IoT devices. The flow is typically started on such a device and has the user visit a webpage on a more input friendly device and use a code to redeem an access token.
+The example below shows how to invoke the device authorization flow using the default endpoints for Entra ID. The parameters `-ClientId`, `-Tenant`, and `-Scope` are required.
+The application has to configured to allow public client flows (Entra ID manifest: `"isFallbackPublicClient": true`).
+```powershell
+Invoke-DeviceAuthorizationFlow -ClientId "{clientId}" -Tenant "{tenantId}" -Scope "openid email profile"
+```
