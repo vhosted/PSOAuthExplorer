@@ -1,5 +1,4 @@
 [![Latest Release](https://img.shields.io/github/v/release/vhosted/PSOAuthExplorer)](https://github.com/vhosted/PSOAuthExplorer/releases/latest)
-[![test build and publish PowerShell module](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml/badge.svg)](https://github.com/vhosted/PSOAuthExplorer/actions/workflows/build.yml)
 # PSOAuthExplorer
 
 **PSOAuthExplorer** is a PowerShell module created for exploring, testing, and learning OAuth2 and OpenID Connect (OIDC) flows. Heavily focused on Entra ID, other IdPs have not been tested yet.
@@ -9,6 +8,7 @@
 - **Authorization Code Flow**: Learn and test the OAuth2 authorization code flow, with PKCE support.
 - **Client Credentials Flow**: Learn and test the Oauth2 client credentials flow.
 - **Device Authorization Flow**: Learn and test the OAuth2 Device Authorization Flow.
+- **Convert JWT token**: Convert a JWT token to a human-readable format.
 
 ## Upcoming Features
 - **Information/Help pages for OAUTH flows**: Detailed information and examples for each flow.
