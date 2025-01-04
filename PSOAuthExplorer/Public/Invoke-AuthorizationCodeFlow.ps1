@@ -105,14 +105,14 @@ function Invoke-AuthorizationCodeFlow {
     $listenerPort = $RedirectUri.Split(":")[-1].Replace("/", "")
 
     # Startup HTTP listener as a job to catch authorization code, stops after a default timeout of 60 seconds
+    $HttpListenerDefinition = Get-Command "Start-HttpListener"
+    $HttpListenerFunction = "function $($HttpListenerDefinition.Name) { $($HttpListenerDefinition.Definition) }"
     Write-Verbose "Starting HTTP listener on port tcp/$listenerPort"
     $job = Start-Job -Name "StartupHttpListener" -ScriptBlock {
-        param ($RedirectUri)
-        # needed while testing
-        $ModulePath = "C:\work\Git\PSOAuthExplorer\src\PSOAuthExplorer.psd1"
-        if (Test-Path $ModulePath) { Import-Module $ModulePath }
+        param ($RedirectUri, $HttpListenerFunction)
+        Invoke-Expression $HttpListenerFunction
         Start-HttpListener -Prefix $RedirectUri -Verbose
-    } -ArgumentList $RedirectUri
+    } -ArgumentList $RedirectUri, $HttpListenerFunction
 
     Get-AuthorizationCode @authReqParam
 
