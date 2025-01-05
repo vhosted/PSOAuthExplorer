@@ -38,15 +38,7 @@ jobs:
       run: ./build/build.ps1 -Version ${{env.majorMinorPatch}}
       shell: pwsh
 
-    - name: Check for changes
-      id: check_changes
-      run: | 
-        git diff --quiet
-        echo "CHANGES_FOUND=$?" >> $GITHUB_OUTPUT
-      continue-on-error: true
-
     - name: commit and push changes
-      if: steps.check_changes.CHANGES_FOUND != '0'
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
