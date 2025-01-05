@@ -1,11 +1,13 @@
 name: publish
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*.*.*"
 
-on: workflow_dispatch
+# on: workflow_dispatch
 
 jobs:
   build:

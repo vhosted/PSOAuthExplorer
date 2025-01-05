@@ -1,12 +1,11 @@
 name: (dry run) test and build
 
-# on:
-#   pull_request:
-#     branches:
-#       - main
-#       - dev
+on:
+  pull_request:
+    branches:
+      - dev
 
-on: workflow_dispatch
+# on: workflow_dispatch
 
 jobs:
   build:
@@ -38,14 +37,3 @@ jobs:
     - name: build module
       run: ./build/build.ps1 -Version ${{env.majorMinorPatch}}
       shell: pwsh
-
-    - name: Check for changes
-      id: check_changes
-      run: | 
-        git diff --exit-code || echo "Changes detected"
-      continue-on-error: true
-
-    - name: (dry-run) commit and push changes
-      if: steps.check_changes.outcome == 'failure'
-      run: |
-        echo "(dry run) changes detected, this step would commit and push changes"
