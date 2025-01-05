@@ -1,13 +1,15 @@
-name: test build and publish PowerShell module
+name: test and build
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+
+on: workflow_dispatch
 
 jobs:
   build:
-    name: test build and deploy PowerShell module
+    name: test and build PowerShell module
     runs-on: ubuntu-latest
 
     steps:
@@ -51,14 +53,3 @@ jobs:
         git add .
         git commit -m "auto bump version to ${{env.majorMinorPatch}}"
         git push
-
-    - name: publish module to PSGallery
-      run: ./build/publish.ps1 -ApiKey ${{secrets.PS_GALLERY_KEY}}
-      shell: pwsh
-
-    - name: create github release
-      uses: softprops/action-gh-release@v2
-      with:
-        name: Auto generated release ${{env.majorMinorPatch}}
-        tag_name: ${{env.majorMinorPatch}}
-        make_latest: "true"
