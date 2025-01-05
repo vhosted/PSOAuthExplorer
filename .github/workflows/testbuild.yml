@@ -1,14 +1,16 @@
-name: (dry run) test and build PowerShell module
+name: (dry run) test and build
 
-on:
-  pull_request:
-    branches:
-      - main
-      - dev
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#       - dev
+
+on: workflow_dispatch
 
 jobs:
   build:
-    name: test build and deploy PowerShell module
+    name: test and build PowerShell module
     runs-on: ubuntu-latest
 
     steps:

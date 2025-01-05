@@ -1,0 +1,29 @@
+name: publish
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: publish PowerShell module
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: publish module to PSGallery
+      run: ./build/publish.ps1 -ApiKey ${{secrets.PS_GALLERY_KEY}}
+      shell: pwsh
+
+    - name: create github release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        make_latest: "true"
