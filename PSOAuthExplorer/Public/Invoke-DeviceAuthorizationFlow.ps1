@@ -77,7 +77,6 @@ function Invoke-DeviceAuthorizationFlow {
 
     try {
         $authResponse = Invoke-RestMethod -Method Post -Uri $DeviceCodeEndpoint -ContentType $ContentType -Body $authRequestBody
-        
     }
     catch {
         <#Do this if a terminating exception happens#>
